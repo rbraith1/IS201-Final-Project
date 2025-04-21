@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Checkers Game</title>
+    <style>
+        /* Game container */
+        .game-container {
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Button styling */
+        .restart-btn {
+            background-color: #769656;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+
+        .restart-btn:hover {
+            background-color: #5a7441;
+        }
+
+        /* Board styling */
+        #board {
+            border-collapse: collapse;
+            margin: 20px auto;
+            border: 2px solid #333;
+        }
+
+        /* Cell styling */
+        #board td {
+            width: 60px;
+            height: 60px;
+            padding: 0;
+            position: relative;
+        }
+
+        /* Square colors */
+        .light {
+            background-color: #eeeed2;
+        }
+
+        .dark {
+            background-color: #769656;
+        }
+
+        /* Checker pieces */
+        .piece {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .piece.red {
+            background-color: #ff4444;
+            border: 2px solid #cc0000;
+        }
+
+        .piece.black {
+            background-color: #333;
+            border: 2px solid #000;
+        }
+
+        /* Selected piece highlight */
+        .selected .piece {
+            box-shadow: 0 0 10px #ffeb3b;
+        }
+
+        /* Status message */
+        #status {
+            font-size: 1.2em;
+            margin: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        /* Footer styles */
+        .footer-section {
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer-section a {
+            color: #333;
+            text-decoration: none;
+            padding: 0 15px;
+            font-size: 16px;
+        }
+
+        .footer-section a:hover {
+            color: #769656;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Checkers Game</h1>
+        <button class="restart-btn" onclick="restartGame()">Restart Game</button>
+        <div id="status">Your turn! Play as red pieces.</div>
+        <table id="board">
+            <tbody>
+                <tr>
+                    <td class="dark" data-position="0-0"><div class="piece black"></div></td>
+                    <td class="light" data-position="0-1"></td>
+                    <td class="dark" data-position="0-2"><div class="piece black"></div></td>
+                    <td class="light" data-position="0-3"></td>
+                    <td class="dark" data-position="0-4"><div class="piece black"></div></td>
+                    <td class="light" data-position="0-5"></td>
+                    <td class="dark" data-position="0-6"><div class="piece black"></div></td>
+                    <td class="light" data-position="0-7"></td>
+                </tr>
+                <tr>
+                    <td class="light" data-position="1-0"></td>
+                    <td class="dark" data-position="1-1"><div class="piece black"></div></td>
+                    <td class="light" data-position="1-2"></td>
+                    <td class="dark" data-position="1-3"><div class="piece black"></div></td>
+                    <td class="light" data-position="1-4"></td>
+                    <td class="dark" data-position="1-5"><div class="piece black"></div></td>
+                    <td class="light" data-position="1-6"></td>
+                    <td class="dark" data-position="1-7"><div class="piece black"></div></td>
+                </tr>
+                <tr>
+                    <td class="dark" data-position="2-0"><div class="piece black"></div></td>
+                    <td class="light" data-position="2-1"></td>
+                    <td class="dark" data-position="2-2"><div class="piece black"></div></td>
+                    <td class="light" data-position="2-3"></td>
+                    <td class="dark" data-position="2-4"><div class="piece black"></div></td>
+                    <td class="light" data-position="2-5"></td>
+                    <td class="dark" data-position="2-6"><div class="piece black"></div></td>
+                    <td class="light" data-position="2-7"></td>
+                </tr>
+                <tr>
+                    <td class="light" data-position="3-0"></td>
+                    <td class="dark" data-position="3-1"></td>
+                    <td class="light" data-position="3-2"></td>
+                    <td class="dark" data-position="3-3"></td>
+                    <td class="light" data-position="3-4"></td>
+                    <td class="dark" data-position="3-5"></td>
+                    <td class="light" data-position="3-6"></td>
+                    <td class="dark" data-position="3-7"></td>
+                </tr>
+                <tr>
+                    <td class="dark" data-position="4-0"></td>
+                    <td class="light" data-position="4-1"></td>
+                    <td class="dark" data-position="4-2"></td>
+                    <td class="light" data-position="4-3"></td>
+                    <td class="dark" data-position="4-4"></td>
+                    <td class="light" data-position="4-5"></td>
+                    <td class="dark" data-position="4-6"></td>
+                    <td class="light" data-position="4-7"></td>
+                </tr>
+                <tr>
+                    <td class="light" data-position="5-0"></td>
+                    <td class="dark" data-position="5-1"><div class="piece red"></div></td>
+                    <td class="light" data-position="5-2"></td>
+                    <td class="dark" data-position="5-3"><div class="piece red"></div></td>
+                    <td class="light" data-position="5-4"></td>
+                    <td class="dark" data-position="5-5"><div class="piece red"></div></td>
+                    <td class="light" data-position="5-6"></td>
+                    <td class="dark" data-position="5-7"><div class="piece red"></div></td>
+                </tr>
+                <tr>
+                    <td class="dark" data-position="6-0"><div class="piece red"></div></td>
+                    <td class="light" data-position="6-1"></td>
+                    <td class="dark" data-position="6-2"><div class="piece red"></div></td>
+                    <td class="light" data-position="6-3"></td>
+                    <td class="dark" data-position="6-4"><div class="piece red"></div></td>
+                    <td class="light" data-position="6-5"></td>
+                    <td class="dark" data-position="6-6"><div class="piece red"></div></td>
+                    <td class="light" data-position="6-7"></td>
+                </tr>
+                <tr>
+                    <td class="light" data-position="7-0"></td>
+                    <td class="dark" data-position="7-1"><div class="piece red"></div></td>
+                    <td class="light" data-position="7-2"></td>
+                    <td class="dark" data-position="7-3"><div class="piece red"></div></td>
+                    <td class="light" data-position="7-4"></td>
+                    <td class="dark" data-position="7-5"><div class="piece red"></div></td>
+                    <td class="light" data-position="7-6"></td>
+                    <td class="dark" data-position="7-7"><div class="piece red"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer-section">
+        <a href="index.html">Back to Home</a> |
+        <a href="Travel.html">Back to Travel Page</a>
+    </div>
+
+    <script>
+        let selectedPiece = null;
+        let isRedTurn = true; // Red goes first
+
+        // Function to get all valid moves for a piece
+        function getValidMoves(piece) {
+            const cell = piece.parentElement;
+            const [row, col] = cell.dataset.position.split('-').map(Number);
+            const moves = [];
+            const jumps = [];
+            const direction = piece.classList.contains('black') ? 1 : -1; // Black moves down, red moves up
+
+            // Check diagonal moves
+            const diagonals = [[direction, -1], [direction, 1]];
+            diagonals.forEach(([dRow, dCol]) => {
+                const newRow = row + dRow;
+                const newCol = col + dCol;
+                const targetCell = document.querySelector(`[data-position="${newRow}-${newCol}"]`);
+                
+                if (targetCell && !targetCell.querySelector('.piece')) {
+                    moves.push([newRow, newCol]);
+                }
+
+                // Check for jumps
+                const jumpRow = row + (dRow * 2);
+                const jumpCol = col + (dCol * 2);
+                const jumpCell = document.querySelector(`[data-position="${jumpRow}-${jumpCol}"]`);
+                if (jumpCell && !jumpCell.querySelector('.piece')) {
+                    const jumpedCell = document.querySelector(`[data-position="${newRow}-${newCol}"]`);
+                    const jumpedPiece = jumpedCell?.querySelector('.piece');
+                    if (jumpedPiece && 
+                        ((piece.classList.contains('red') && jumpedPiece.classList.contains('black')) ||
+                         (piece.classList.contains('black') && jumpedPiece.classList.contains('red')))) {
+                        jumps.push([jumpRow, jumpCol]);
+                    }
+                }
+            });
+
+            return { moves, jumps };
+        }
+
+        // AI move function
+        function makeAIMove() {
+            if (isRedTurn) return; // Only move on black's turn
+            
+            // Get all black pieces
+            const blackPieces = document.querySelectorAll('.piece.black');
+            let bestMove = null;
+            let bestPiece = null;
+
+            // First priority: Check for any possible jumps
+            blackPieces.forEach(piece => {
+                const { jumps } = getValidMoves(piece);
+                if (jumps.length > 0) {
+                    bestMove = jumps[Math.floor(Math.random() * jumps.length)];
+                    bestPiece = piece;
+                }
+            });
+
+            // If no jumps, look for regular moves
+            if (!bestMove) {
+                blackPieces.forEach(piece => {
+                    const { moves } = getValidMoves(piece);
+                    if (moves.length > 0) {
+                        bestMove = moves[Math.floor(Math.random() * moves.length)];
+                        bestPiece = piece;
+                    }
+                });
+            }
+
+            // Execute the move if one was found
+            if (bestMove && bestPiece) {
+                const [newRow, newCol] = bestMove;
+                const targetCell = document.querySelector(`[data-position="${newRow}-${newCol}"]`);
+                const currentCell = bestPiece.parentElement;
+                const [oldRow, oldCol] = currentCell.dataset.position.split('-').map(Number);
+
+                // If it's a jump, remove the jumped piece
+                if (Math.abs(newRow - oldRow) === 2) {
+                    const jumpedRow = (oldRow + newRow) / 2;
+                    const jumpedCol = (oldCol + newCol) / 2;
+                    const jumpedCell = document.querySelector(`[data-position="${jumpedRow}-${jumpedCol}"]`);
+                    jumpedCell.removeChild(jumpedCell.querySelector('.piece'));
+                }
+
+                // Move the piece
+                targetCell.appendChild(bestPiece);
+                isRedTurn = true;
+                document.getElementById('status').textContent = "Your turn! (Red)";
+            }
+        }
+
+        // Function to restart the game
+        function restartGame() {
+            // Clear all pieces
+            document.querySelectorAll('.piece').forEach(piece => piece.remove());
+            
+            // Reset black pieces (top three rows)
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if ((row + col) % 2 === 0) {
+                        const cell = document.querySelector(`[data-position="${row}-${col}"]`);
+                        const piece = document.createElement('div');
+                        piece.className = 'piece black';
+                        cell.appendChild(piece);
+                    }
+                }
+            }
+            
+            // Reset red pieces (bottom three rows)
+            for (let row = 5; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if ((row + col) % 2 === 0) {
+                        const cell = document.querySelector(`[data-position="${row}-${col}"]`);
+                        const piece = document.createElement('div');
+                        piece.className = 'piece red';
+                        cell.appendChild(piece);
+                    }
+                }
+            }
+            
+            // Reset game state
+            selectedPiece = null;
+            isRedTurn = true;
+            document.getElementById('status').textContent = "Your turn! Play as red pieces.";
+            document.querySelectorAll('.selected').forEach(cell => cell.classList.remove('selected'));
+        }
+
+        document.getElementById('board').addEventListener('click', function(e) {
+            if (!isRedTurn) return; // Prevent clicks during AI turn
+            
+            const cell = e.target.closest('td');
+            if (!cell) return;
+
+            const piece = cell.querySelector('.piece');
+            
+            // If no piece is selected and we click on our piece
+            if (!selectedPiece && piece && piece.classList.contains('red')) {
+                selectedPiece = piece;
+                cell.classList.add('selected');
+                return;
+            }
+
+            // If a piece is selected and we click on a valid move location
+            if (selectedPiece) {
+                const oldCell = selectedPiece.parentElement;
+                const [oldRow, oldCol] = oldCell.dataset.position.split('-').map(Number);
+                const [newRow, newCol] = cell.dataset.position.split('-').map(Number);
+
+                let validMove = false;
+
+                // Check if move is diagonal
+                if (Math.abs(newRow - oldRow) === 1 && Math.abs(newCol - oldCol) === 1) {
+                    if (!piece) { // If target cell is empty
+                        cell.appendChild(selectedPiece);
+                        validMove = true;
+                    }
+                }
+                // Check for jumps
+                else if (Math.abs(newRow - oldRow) === 2 && Math.abs(newCol - oldCol) === 2) {
+                    const jumpedRow = (oldRow + newRow) / 2;
+                    const jumpedCol = (oldCol + newCol) / 2;
+                    const jumpedCell = document.querySelector(`[data-position="${jumpedRow}-${jumpedCol}"]`);
+                    const jumpedPiece = jumpedCell.querySelector('.piece');
+
+                    if (jumpedPiece && !piece && jumpedPiece.classList.contains('black')) {
+                        jumpedCell.removeChild(jumpedPiece);
+                        cell.appendChild(selectedPiece);
+                        validMove = true;
+                    }
+                }
+
+                if (validMove) {
+                    oldCell.classList.remove('selected');
+                    isRedTurn = false;
+                    document.getElementById('status').textContent = "AI is thinking...";
+                    // Add a small delay to make AI move feel more natural
+                    setTimeout(makeAIMove, 500);
+                }
+
+                selectedPiece = null;
+                document.querySelectorAll('.selected').forEach(cell => cell.classList.remove('selected'));
+            }
+        });
+    </script>
+</body>
+</html>

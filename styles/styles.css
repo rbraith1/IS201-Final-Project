@@ -1,0 +1,56 @@
+p{
+    font-weight: bold;
+    font-size: 30px;
+}
+
+#top{
+    text-decoration: underline;
+}
+.emphasizedText{
+        font-style: italic;
+        color: gray;
+
+}
+Body{
+    background-color:#BDD6E6;
+    text-align: center;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    border: 5px solid black;
+    margin: 50 px;
+    padding: 25 px;
+}
+.centered-list{
+    padding-left: 0;
+    list-style-position: outside;
+    margin: 0 auto;
+    display:table;
+    text-align: left;
+
+}
+
+.header-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color:whitesmoke
+}
+
+.travel-section {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: whitesmoke
+}
+
+.footer-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: whitesmoke
+}
+
+.yearly-activities-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.tableauPlaceholder {
+    margin: 0 auto;
+}
